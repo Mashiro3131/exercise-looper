@@ -3,12 +3,14 @@ CREATE DATABASE IF NOT EXISTS exercice_looper_db;
 USE exercice_looper_db;
 
 
-CREATE TABLE questionnaires
-(
+CREATE TABLE questionnaires (
     questionnaire_id INT AUTO_INCREMENT,
     title            VARCHAR(255) NOT NULL,
+    status           ENUM('editing', 'answering', 'closed') NOT NULL DEFAULT 'editing',
+
     CONSTRAINT pk_questionnaires PRIMARY KEY (questionnaire_id),
-    CONSTRAINT chk_questionnaires_title CHECK (CHAR_LENGTH(TRIM(title)) > 0)
+    CONSTRAINT chk_questionnaires_title
+    CHECK (CHAR_LENGTH(TRIM(title)) > 0)
 );
 
 
@@ -33,4 +35,3 @@ CREATE TABLE questions
     CONSTRAINT fk_questions_questionnaire FOREIGN KEY (questionnaire_id) REFERENCES questionnaires (questionnaire_id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_questions_question_type FOREIGN KEY (question_type_id) REFERENCES question_types (question_type_id) ON UPDATE CASCADE ON DELETE RESTRICT
 );
-
