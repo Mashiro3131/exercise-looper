@@ -10,8 +10,10 @@
 /test/version_tmp/
 /tmp/
 
-# Used by dotenv library to load environment variables.
-# .env
+# Environment variables
+.env
+.env.*
+!.env.example
 
 # Ignore Byebug command history file.
 .byebug_history
@@ -54,3 +56,17 @@ build-iPhoneSimulator/
 
 # Used by RuboCop. Remote config files pulled in from inherit_from directive.
 # .rubocop-https?--*
+
+## RubyMine / JetBrains IDE
+.idea/
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Logs
+/log/*.log
+
+## Editor swap files
+*.swp
+*~
