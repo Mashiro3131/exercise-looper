@@ -7,8 +7,8 @@ class QuestionRepository
   end
 
   def update(question_id, question_text, questionnaire_id, question_type_id)
-    statement = @db.prepare("UPDATE questions SET question_text = ?, questionnaire_id = ?,question_type_id = ? WHERE question_id = ?")
-    statement.execute(question_id, question_text, questionnaire_id, question_type_id)
+    statement = @db.prepare("UPDATE questions SET question_text = ?, questionnaire_id = ?, question_type_id = ? WHERE question_id = ?")
+    statement.execute(question_text, questionnaire_id, question_type_id, question_id)
   end
 
   def create(question_text, questionnaire_id, question_type_id)

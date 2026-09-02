@@ -11,6 +11,10 @@ class ExerciceLooperService
     @questionnaire_repository.create(title)
   end
 
+  def update_questionnaire(questionnaire_id, status)
+    @questionnaire_repository.update(questionnaire_id,status)
+  end
+
   def fetch_all_questionnaires
     puts "Fetching all questionnaires"
     @questionnaire_repository.find_all
@@ -29,4 +33,5 @@ class ExerciceLooperService
   def find_all_questions_by_questionnaire_id(questionnaire_id)
     @questions_repository.find_all_questions_by_questionnaire_id(questionnaire_id)
   end
+
 end

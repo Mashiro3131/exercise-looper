@@ -28,10 +28,22 @@ class Api
       return [201, { "content-type" => "application/json" }, [{ message: "Questionnaire #{title} created" }.to_json]]
     end
 
+    if path == "/api/questionnaires" && method == "PUT"
+      body = env["rack.input"].read
+      data = JSON.parse(body)
+
+      status = data["status"]
+      id_questionnaire = data["id_questionnaire"]
+      @exercice_looper_service.update_questionnaire(id_questionnaire,status)
+      return [201, { "content-type" => "application/json" }, [{ message: "Questionnaire #{id_questionnaire} UPDATE, Status is now #{status}" }.to_json]]
+    end
+
     if path == "/api/questionnaires" && method == "GET"
       questionnaires = @exercice_looper_service.fetch_all_questionnaires
       return [ 200, { "content-type" => "application/json" }, [{ questionnaires: questionnaires }.to_json]]
     end
+
+    # QUESTIONS
 
     if path == "/api/questions" && method == "GET"
       body = env["rack.input"].read
