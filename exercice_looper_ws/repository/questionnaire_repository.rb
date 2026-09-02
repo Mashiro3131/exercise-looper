@@ -11,6 +11,6 @@ class QuestionnaireRepository
   end
 
   def find_all
-    @db.query("SELECT * FROM questionnaires").to_a
+    @db.query("SELECT * FROM questionnaires ").to_a
   end
 end

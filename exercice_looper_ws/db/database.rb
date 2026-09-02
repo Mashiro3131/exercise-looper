@@ -9,7 +9,7 @@ ENV['MARIADB_TLS_DISABLE_PEER_VERIFICATION'] = '1'
 class Database
   def self.connection
     if @connection.nil? || @connection == false
-        @connection = Mysql2::Client.new(host:"CHANGE_ME",username:"CHANGE_ME",password:"CHANGE_ME",database:"exercice_looper_db")
+        @connection = Mysql2::Client.new(host:"localhost",username:"pedro",password:"12345678",database:"exercice_looper_db")
     end
     @connection
   end
