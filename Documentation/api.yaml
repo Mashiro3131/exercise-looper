@@ -1,0 +1,266 @@
+openapi: 3.0.3
+
+info:
+  title: Exercise Looper API
+  description: API for managing questionnaires and their questions.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:9292
+    description: Local Rack/Puma server
+
+tags:
+  - name: Questionnaires
+  - name: Questions
+
+paths:
+  /api/questionnaires:
+    get:
+      tags: [Questionnaires]
+      summary: Get all questionnaires
+      operationId: getQuestionnaires
+      responses:
+        "200":
+          description: List of questionnaires
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [questionnaires]
+                properties:
+                  questionnaires:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Questionnaire"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    post:
+      tags: [Questionnaires]
+      summary: Create a questionnaire
+      operationId: createQuestionnaire
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuestionnaireRequest"
+            example:
+              title: Ruby basics
+      responses:
+        "201":
+          description: Questionnaire created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+              example:
+                message: Questionnaire Ruby basics created
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Questionnaires]
+      summary: Update a questionnaire status
+      operationId: updateQuestionnaire
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateQuestionnaireRequest"
+            example:
+              id_questionnaire: 1
+              status: answering
+      responses:
+        "201":
+          description: Questionnaire updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+              example:
+                message: Questionnaire 1 UPDATE, Status is now answering
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/questions:
+    get:
+      tags: [Questions]
+      summary: Get questions belonging to a questionnaire
+      description: The current Ruby implementation expects questionnaire_id in a JSON GET body. Some clients and Swagger tools may not send GET request bodies reliably.
+      operationId: getQuestionsByQuestionnaire
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [questionnaire_id]
+              properties:
+                questionnaire_id:
+                  type: integer
+                  minimum: 1
+            example:
+              questionnaire_id: 1
+      responses:
+        "200":
+          description: Questions for the selected questionnaire
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [questions]
+                properties:
+                  questions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Question"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    post:
+      tags: [Questions]
+      summary: Create a question
+      operationId: createQuestion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuestionRequest"
+            example:
+              questionnaire_id: 1
+              question_text: What is a Ruby block?
+              question_type_id: 1
+      responses:
+        "201":
+          description: Question created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+              example:
+                message: question What is a Ruby block? created
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    put:
+      tags: [Questions]
+      summary: Update a question
+      operationId: updateQuestion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateQuestionRequest"
+            example:
+              question_id: 1
+              questionnaire_id: 1
+              question_text: Explain what a Ruby block is.
+              question_type_id: 1
+      responses:
+        "200":
+          description: Question updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+              example:
+                message: question Explain what a Ruby block is. UPDATED
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  schemas:
+    QuestionnaireStatus:
+      type: string
+      enum: [editing, answering, closed]
+
+    Questionnaire:
+      type: object
+      properties:
+        questionnaire_id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Ruby basics
+        status:
+          $ref: "#/components/schemas/QuestionnaireStatus"
+
+    Question:
+      type: object
+      properties:
+        question_id:
+          type: integer
+          example: 1
+        question_text:
+          type: string
+          example: What is a Ruby block?
+        questionnaire_id:
+          type: integer
+          example: 1
+        question_type_id:
+          type: integer
+          example: 1
+
+    CreateQuestionnaireRequest:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+          minLength: 1
+
+    UpdateQuestionnaireRequest:
+      type: object
+      required: [id_questionnaire, status]
+      properties:
+        id_questionnaire:
+          type: integer
+          minimum: 1
+        status:
+          $ref: "#/components/schemas/QuestionnaireStatus"
+
+    CreateQuestionRequest:
+      type: object
+      required: [questionnaire_id, question_text, question_type_id]
+      properties:
+        questionnaire_id:
+          type: integer
+          minimum: 1
+        question_text:
+          type: string
+          minLength: 1
+        question_type_id:
+          type: integer
+          minimum: 1
+
+    UpdateQuestionRequest:
+      allOf:
+        - $ref: "#/components/schemas/CreateQuestionRequest"
+        - type: object
+          required: [question_id]
+          properties:
+            question_id:
+              type: integer
+              minimum: 1
+
+    MessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+
+  responses:
+    NotFound:
+      description: Route not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MessageResponse"
+          example:
+            message: Route not found
