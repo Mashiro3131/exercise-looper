@@ -61,4 +61,3 @@ build-iPhoneSimulator/
 **/.idea/tasks.xml
 .idea/
 *.iml
-.env
