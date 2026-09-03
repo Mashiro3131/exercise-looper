@@ -34,6 +34,26 @@ paths:
                       $ref: "#/components/schemas/Questionnaire"
         "404":
           $ref: "#/components/responses/NotFound"
+  /api/questionnaires/id:
+    get:
+      tags: [ Questionnaires ]
+      summary: Get questionnaire by id
+      operationId: getQuestionnairesById
+      responses:
+        "200":
+          description: questionnaire
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ questionnaire ]
+                properties:
+                  questionnaire:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Questionnaire"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
     post:
       tags: [Questionnaires]
@@ -174,9 +194,6 @@ paths:
 
 components:
   schemas:
-    QuestionnaireStatus:
-      type: string
-      enum: [editing, answering, closed]
 
     Questionnaire:
       type: object
@@ -188,7 +205,8 @@ components:
           type: string
           example: Ruby basics
         status:
-          $ref: "#/components/schemas/QuestionnaireStatus"
+          type: string
+          enum: [editing, answering, closed]
 
     Question:
       type: object
@@ -222,7 +240,8 @@ components:
           type: integer
           minimum: 1
         status:
-          $ref: "#/components/schemas/QuestionnaireStatus"
+          type: string
+          enum: [editing, answering, closed]
 
     CreateQuestionRequest:
       type: object
