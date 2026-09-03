@@ -1,6 +1,7 @@
 # api.rb
 
 require "json"
+require "uri"
 
 require_relative "db/database"
 require_relative "repository/questionnaire_repository"
@@ -41,6 +42,15 @@ class Api
     if path == "/api/questionnaires" && method == "GET"
       questionnaires = @exercice_looper_service.fetch_all_questionnaires
       return [ 200, { "content-type" => "application/json" }, [{ questionnaires: questionnaires }.to_json]]
+    end
+
+    if method == "GET" && (match = path.match(%r{\A/api/questionnaires/(\d+)\z}))
+      questionnaire_id = match[1]
+      questionnaire = @exercice_looper_service.fetch_questionnaire_by_questionnaire_id(questionnaire_id)
+      if questionnaire.nil?
+        return [404, { "content-type" => "application/json" }, [{ error: "Questionnaire not found" }.to_json]]
+      end
+      return [200, { "content-type" => "application/json" }, [questionnaire.to_json]]
     end
 
     # QUESTIONS

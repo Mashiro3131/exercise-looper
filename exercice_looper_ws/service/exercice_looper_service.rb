@@ -7,7 +7,7 @@ class ExerciceLooperService
   end
 
   def create_questionnaire(title)
-    puts "Nom du questionnaire : #{title}"
+    puts "questionnaire name : #{title}"
     @questionnaire_repository.create(title)
   end
 
@@ -20,13 +20,20 @@ class ExerciceLooperService
     @questionnaire_repository.find_all
   end
 
+  def fetch_questionnaire_by_questionnaire_id(questionnaire_id)
+    puts "Fetching questionnaire by id #{questionnaire_id}"
+    @questionnaire_repository.find_by_id(questionnaire_id)
+  end
+
+  # ================== QUESTIONS =====================
+
   def create_question(question_text, questionnaire_id, question_type_id)
-    puts "Nom du question crée: #{question_text}"
+    puts "New question question_text: #{question_text}"
     @questions_repository.create(question_text, questionnaire_id, question_type_id)
   end
 
   def update_question(question_id,question_text, questionnaire_id, question_type_id)
-    puts "Nom et ID du question MAJ: #{question_text}, #{question_id}"
+    puts "Updated question question_text and question_id: #{question_text}, #{question_id}"
     @questions_repository.update(question_id,question_text, questionnaire_id, question_type_id)
   end
 
