@@ -34,29 +34,9 @@ paths:
                       $ref: "#/components/schemas/Questionnaire"
         "404":
           $ref: "#/components/responses/NotFound"
-  /api/questionnaires/id:
-    get:
-      tags: [ Questionnaires ]
-      summary: Get questionnaire by id
-      operationId: getQuestionnairesById
-      responses:
-        "200":
-          description: questionnaire
-          content:
-            application/json:
-              schema:
-                type: object
-                required: [ questionnaire ]
-                properties:
-                  questionnaire:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Questionnaire"
-        "404":
-          $ref: "#/components/responses/NotFound"
 
     post:
-      tags: [Questionnaires]
+      tags: [ Questionnaires ]
       summary: Create a questionnaire
       operationId: createQuestionnaire
       requestBody:
@@ -76,6 +56,27 @@ paths:
                 $ref: "#/components/schemas/MessageResponse"
               example:
                 message: Questionnaire Ruby basics created
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/questionnaires/id:
+    get:
+      tags: [ Questionnaires ]
+      summary: Get questionnaire by id
+      operationId: getQuestionnairesById
+      responses:
+        "200":
+          description: questionnaire
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ questionnaire ]
+                properties:
+                  questionnaire:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Questionnaire"
         "404":
           $ref: "#/components/responses/NotFound"
 
