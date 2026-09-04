@@ -1,13 +1,13 @@
-site_name: Proxmox
+site_name: Exercice looper
 
 nav:
   - Home: index.md
+  - Gestion de projet:
+      - DoD: gestion-de-projet/dod.md
   - About: about.md
-  - VMs:
-      - Distributions:
-          - vms/distributions.md
-          - VPN: vms/vpn-ubunto.md
-      - BackUps: vms/backups.md
-      - SnapShots: vms/snapshots.md
 
-theme: readthedocs
+theme:
+  name: readthedocs
+
+extra_css:
+  - stylesheets/extra.css
