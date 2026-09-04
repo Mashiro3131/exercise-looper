@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "mysql2"
+require 'mysql2'
+require 'dotenv/load'
 
 ENV["MARIADB_TLS_DISABLE_PEER_VERIFICATION"] = "1"
 
