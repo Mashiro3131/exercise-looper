@@ -1,0 +1,13 @@
+site_name: Exercice looper
+
+nav:
+  - Home: index.md
+  - Gestion de projet:
+      - DoD: gestion-de-projet/dod.md
+  - About: about.md
+
+theme:
+  name: readthedocs
+
+extra_css:
+  - stylesheets/extra.css
