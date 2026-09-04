@@ -1,3 +1,3 @@
-# Exercice_looper
+# Exercice looper
 
-Documentation MAW11
+Documentation MAW11.

@@ -4,11 +4,33 @@
 
 # Stack de technologies
 
-# Deployement 
+# Deployement
 
-### Déploiement de l’API
+## Deployer la documentation en local
 
-#### Installation des dépendances
+### Installation des dépendances
+Verifier si python est installé
+ ```bash
+ python --version
+```
+
+Installer mkdocs
+ ```bash
+ pip install mkdocs
+```
+
+Dans le dossier de la documentation lancer le serveur mkdocs
+
+```bash
+ cd Documentation/exercice_looper_documentation
+```
+
+```bash
+ mkdocs serve
+```
+
+## Deployer l’API
+### Installation des dépendances
 
 Install global des gems nécessaires à l'api :
 

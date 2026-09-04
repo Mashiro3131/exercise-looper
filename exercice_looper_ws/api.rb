@@ -55,11 +55,8 @@ class Api
 
     # QUESTIONS
 
-    if path == "/api/questions" && method == "GET"
-      body = env["rack.input"].read
-      data = JSON.parse(body)
-
-      questionnaire_id = data["questionnaire_id"]
+    if(method == "GET" && (match = path.match(%r{\A/api/questions/(\d+)\z})))
+      questionnaire_id = match[1]
       questions = @exercice_looper_service.find_all_questions_by_questionnaire_id(questionnaire_id)
       return [200,{ "content-type" => "application/json" }, [{questions: questions}.to_json] ]
     end
