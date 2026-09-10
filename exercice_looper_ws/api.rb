@@ -2,6 +2,7 @@
 
 require "json"
 require "uri"
+require "rack"
 
 require_relative "db/database"
 require_relative "repository/questionnaire_repository"
@@ -21,8 +22,8 @@ class Api
     method = env["REQUEST_METHOD"]
 
     if path == "/api/questionnaires" && method == "POST"
-      body = env["rack.input"].read
-      data = JSON.parse(body)
+      request = Rack::Request.new(env)
+      data = request.params
 
       title = data["title"]
 
@@ -37,8 +38,8 @@ class Api
     end
 
     if path == "/api/questionnaires" && method == "PUT"
-      body = env["rack.input"].read
-      data = JSON.parse(body)
+      request = Rack::Request.new(env)
+      data = request.params
 
       status = data["status"]
       id_questionnaire = data["id_questionnaire"]
