@@ -23,15 +23,24 @@ class Api
 
     # DOCUMENTATION RACK https://rack.github.io/rack/3.2/Rack/Request/Helpers.html
 
-    if path == "/api/questionnaires" && method == "POST"
-      request = Rack::Request.new(env)
-      data = request.params
+    if path == "/" || path == "/index.html"
+      index_path = File.expand_path("../index.html", __dir__)
+      return [200, { "Content-Type" => "text/html; charset=utf-8" }, [File.read(index_path)]]
+    end
 
-      title = data["exercise"] ? data["exercise"]["title"] : data["title"]
+    if path == "/exercises.html"
+      if method == "POST"
+        request = Rack::Request.new(env)
+        data = request.params
 
-      questionnaire_id = @exercice_looper_service.create_questionnaire(title)
+        title = data["exercise"] ? data["exercise"]["title"] : data["title"]
+        questionnaire_id = @exercice_looper_service.create_questionnaire(title)
 
-      return [302, {"Location" => "/exercises/#{questionnaire_id}/fields.html" }, []]
+        return [302, {"Location" => "/exercises/#{questionnaire_id}/fields.html"}, []]
+      else
+        html_output = @exercice_looper_service.render_exercises_page
+        return [200, {"Content-Type" => "text/html"}, [html_output]]
+      end
     end
 
     if path == "/api/questionnaires" && method == "PUT"

@@ -56,4 +56,69 @@ class ExerciceLooperService
     @questions_repository.find_all_questions_by_questionnaire_id(questionnaire_id)
   end
 
+  def render_exercises_page
+    file_path = File.expand_path("../../exercises.html", __dir__)
+    
+    return "Fichier introuvable" unless File.exist?(file_path)
+
+    html = File.read(file_path, encoding: "UTF-8")
+    parts = html.split(/(?=<h1>\s*(?:Building|Answering|Closed)\s*<\/h1>)/i)
+
+    parts.map! do |part|
+      if part.match?(/<h1>\s*Building\s*<\/h1>/i)
+        part.sub(/(<tbody[^>]*>).*?(<\/tbody>)/m, "\\1\n#{generate_rows('editing')}\n\\2")
+      elsif part.match?(/<h1>\s*Answering\s*<\/h1>/i)
+        part.sub(/(<tbody[^>]*>).*?(<\/tbody>)/m, "\\1\n#{generate_rows('answering')}\n\\2")
+      elsif part.match?(/<h1>\s*Closed\s*<\/h1>/i)
+        part.sub(/(<tbody[^>]*>).*?(<\/tbody>)/m, "\\1\n#{generate_rows('closed')}\n\\2")
+      else
+        part
+      end
+    end
+
+    parts.join
+  end
+
+  private
+
+  def generate_rows(status)
+    records = @questionnaire_repository.find_all_questionnaires_by_status(status)
+    return "" if records.nil? || records.empty?
+
+    records.map do |q|
+      case status
+      when "editing"
+        <<~HTML
+          <tr>
+            <td>#{q['title']}</td>
+            <td>
+              <a title="Be ready for answers" rel="nofollow" data-method="put" href="exercises/#{q['id']}.html?exercise%5Bstatus%5D=answering"><i class="fa fa-comment"></i></a>
+              <a title="Manage fields" href="exercises/#{q['questionnaire_id']}/fields.html"><i class="fa fa-edit"></i></a>
+              <a data-confirm="Are you sure?" title="Destroy" rel="nofollow" data-method="delete" href="exercises/#{q['id']}.html"><i class="fa fa-trash"></i></a>
+            </td>
+          </tr>
+        HTML
+      when "answering"
+        <<~HTML
+          <tr>
+            <td>#{q['title']}</td>
+            <td>
+              <a title="Show results" href="exercises/#{q['id']}/results.html"><i class="fa fa-chart-bar"></i></a>
+              <a title="Close" rel="nofollow" data-method="put" href="exercises/#{q['id']}.html?exercise%5Bstatus%5D=closed"><i class="fa fa-minus-circle"></i></a>
+            </td>
+          </tr>
+        HTML
+      when "closed"
+        <<~HTML
+          <tr>
+            <td>#{q['title']}</td>
+            <td>
+              <a title="Show results" href="exercises/#{q['id']}/results.html"><i class="fa fa-chart-bar"></i></a>
+              <a data-confirm="Are you sure?" title="Destroy" rel="nofollow" data-method="delete" href="exercises/#{q['id']}.html"><i class="fa fa-trash"></i></a>
+            </td>
+          </tr>
+        HTML
+      end
+    end.join
+  end
 end

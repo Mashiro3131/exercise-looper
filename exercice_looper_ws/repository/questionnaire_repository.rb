@@ -28,4 +28,8 @@ class QuestionnaireRepository
     statement = @db.prepare("UPDATE questionnaires SET status = ? WHERE questionnaire_id = ?")
     statement.execute(status, questionnaire_id)
   end
+
+  def find_all_questionnaires_by_status(status)
+    @db.query("SELECT * FROM questionnaires WHERE status = '#{status}'").to_a
+  end
 end
