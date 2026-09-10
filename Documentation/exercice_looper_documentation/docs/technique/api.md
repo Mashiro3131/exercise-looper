@@ -2,20 +2,20 @@
 
 API for managing questionnaires and their questions.
 
-**OpenAPI:** `3.0.3`  
-**Local server:** [http://localhost:9292](http://localhost:9292)
+**OpenAPI:** `3.0.3`
+**Local server:** http://localhost:9292
 
 ## Endpoints
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| `GET` | `/api/questionnaires` | Get all questionnaires |
-| `POST` | `/api/questionnaires` | Create a questionnaire |
-| `GET` | `/api/questionnaires/{id}` | Get a questionnaire by ID |
-| `PUT` | `/api/questionnaires/{id}` | Update a questionnaire's status |
-| `GET` | `/api/questions` | Get the questions belonging to a questionnaire |
-| `POST` | `/api/questions` | Create a question |
-| `PUT` | `/api/questions` | Update a question |
+| Method | Endpoint                                 | Description                                |
+| ------ | ---------------------------------------- | ------------------------------------------ |
+| `GET`  | `/api/questionnaires`                    | Get all questionnaires                     |
+| `POST` | `/api/questionnaires`                    | Create a questionnaire                     |
+| `GET`  | `/api/questionnaires/{questionnaire_id}` | Get a questionnaire by ID                  |
+| `PUT`  | `/api/questionnaires`                    | Update a questionnaire's status            |
+| `GET`  | `/api/questions/{questionnaire_id}`      | Get questions belonging to a questionnaire |
+| `POST` | `/api/questions`                         | Create a question                          |
+| `PUT`  | `/api/questions`                         | Update a question                          |
 
 ## Questionnaires
 
@@ -69,9 +69,9 @@ Content-Type: application/json
 }
 ```
 
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `title` | string | Yes | Questionnaire title; cannot be empty |
+| Field   | Type   | Required | Description                          |
+| ------- | ------ | -------- | ------------------------------------ |
+| `title` | string | Yes      | Questionnaire title; cannot be empty |
 
 #### Successful response — `201 Created`
 
@@ -84,12 +84,18 @@ Content-Type: application/json
 ### Get a questionnaire by ID
 
 ```http
-GET /api/questionnaires/{id}
+GET /api/questionnaires/{questionnaire_id}
 ```
 
-| Parameter | Location | Type | Required | Description |
-| --- | --- | --- | --- | --- |
-| `id` | Path | integer | Yes | Questionnaire ID; minimum value: `1` |
+| Parameter          | Location | Type    | Required | Description                          |
+| ------------------ | -------- | ------- | -------- | ------------------------------------ |
+| `questionnaire_id` | Path     | integer | Yes      | Questionnaire ID; minimum value: `1` |
+
+#### Example request
+
+```http
+GET /api/questionnaires/1
+```
 
 #### Successful response — `200 OK`
 
@@ -104,33 +110,35 @@ GET /api/questionnaires/{id}
 ### Update a questionnaire's status
 
 ```http
-PUT /api/questionnaires/{id}
+PUT /api/questionnaires
 Content-Type: application/json
 ```
-
-| Parameter | Location | Type | Required | Description |
-| --- | --- | --- | --- | --- |
-| `id` | Path | integer | Yes | Questionnaire ID; minimum value: `1` |
 
 #### Request body
 
 ```json
 {
+  "id_questionnaire": 1,
   "status": "answering"
 }
 ```
 
+| Field              | Type    | Required | Description                          |
+| ------------------ | ------- | -------- | ------------------------------------ |
+| `id_questionnaire` | integer | Yes      | Questionnaire ID; minimum value: `1` |
+| `status`           | string  | Yes      | New questionnaire status             |
+
 The accepted status values are:
 
-- `editing`
-- `answering`
-- `closed`
+* `editing`
+* `answering`
+* `closed`
 
 #### Successful response — `201 Created`
 
 ```json
 {
-  "message": "Questionnaire 1 UPDATED, status is now answering"
+  "message": "Questionnaire 1 UPDATE, Status is now answering"
 }
 ```
 
@@ -138,17 +146,20 @@ The accepted status values are:
 
 ### Get questions by questionnaire
 
+The questionnaire ID is provided as a URL path parameter. 
+
 ```http
-GET /api/questions
-Content-Type: application/json
+GET /api/questions/{questionnaire_id}
 ```
 
-#### Request body
+| Parameter          | Location | Type    | Required | Description                                                |
+| ------------------ | -------- | ------- | -------- | ---------------------------------------------------------- |
+| `questionnaire_id` | Path     | integer | Yes      | ID of the questionnaire whose questions should be returned |
 
-```json
-{
-  "questionnaire_id": 1
-}
+#### Example request
+
+```http
+GET /api/questions/1
 ```
 
 #### Successful response — `200 OK`
@@ -183,17 +194,17 @@ Content-Type: application/json
 }
 ```
 
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `questionnaire_id` | integer | Yes | Parent questionnaire ID; minimum value: `1` |
-| `question_text` | string | Yes | Question text; cannot be empty |
-| `question_type_id` | integer | Yes | Question type ID; minimum value: `1` |
+| Field              | Type    | Required | Description                                 |
+| ------------------ | ------- | -------- | ------------------------------------------- |
+| `questionnaire_id` | integer | Yes      | Parent questionnaire ID; minimum value: `1` |
+| `question_text`    | string  | Yes      | Question text; cannot be empty              |
+| `question_type_id` | integer | Yes      | Question type ID; minimum value: `1`        |
 
 #### Successful response — `201 Created`
 
 ```json
 {
-  "message": "Question What is a Ruby block? created"
+  "message": "question What is a Ruby block? created"
 }
 ```
 
@@ -215,18 +226,18 @@ Content-Type: application/json
 }
 ```
 
-| Field | Type | Required | Description |
-| --- | --- | --- | --- |
-| `question_id` | integer | Yes | Question ID; minimum value: `1` |
-| `questionnaire_id` | integer | Yes | Parent questionnaire ID; minimum value: `1` |
-| `question_text` | string | Yes | Updated question text; cannot be empty |
-| `question_type_id` | integer | Yes | Question type ID; minimum value: `1` |
+| Field              | Type    | Required | Description                                 |
+| ------------------ | ------- | -------- | ------------------------------------------- |
+| `question_id`      | integer | Yes      | Question ID; minimum value: `1`             |
+| `questionnaire_id` | integer | Yes      | Parent questionnaire ID; minimum value: `1` |
+| `question_text`    | string  | Yes      | Updated question text; cannot be empty      |
+| `question_type_id` | integer | Yes      | Question type ID; minimum value: `1`        |
 
 #### Successful response — `200 OK`
 
 ```json
 {
-  "message": "Question Explain what a Ruby block is. UPDATED"
+  "message": "question Explain what a Ruby block is. UPDATED"
 }
 ```
 
@@ -234,27 +245,35 @@ Content-Type: application/json
 
 ### Questionnaire
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `questionnaire_id` | integer | Unique questionnaire ID |
-| `title` | string | Questionnaire title |
-| `status` | string | `editing`, `answering`, or `closed` |
+| Field              | Type    | Description                         |
+| ------------------ | ------- | ----------------------------------- |
+| `questionnaire_id` | integer | Unique questionnaire ID             |
+| `title`            | string  | Questionnaire title                 |
+| `status`           | string  | `editing`, `answering`, or `closed` |
 
 ### Question
 
-| Field | Type | Description |
-| --- | --- | --- |
-| `question_id` | integer | Unique question ID |
-| `question_text` | string | Question text |
+| Field              | Type    | Description             |
+| ------------------ | ------- | ----------------------- |
+| `question_id`      | integer | Unique question ID      |
+| `question_text`    | string  | Question text           |
 | `questionnaire_id` | integer | Parent questionnaire ID |
-| `question_type_id` | integer | Question type ID |
+| `question_type_id` | integer | Question type ID        |
 
-## Error response
+## Error responses
 
 An unknown route returns `404 Not Found`:
 
 ```json
 {
   "message": "Route not found"
+}
+```
+
+When a questionnaire cannot be found, the API returns:
+
+```json
+{
+  "error": "Questionnaire not found"
 }
 ```
