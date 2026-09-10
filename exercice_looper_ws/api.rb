@@ -27,16 +27,11 @@ class Api
       request = Rack::Request.new(env)
       data = request.params
 
-      title = data["title"]
+      title = data["exercise"] ? data["exercise"]["title"] : data["title"]
 
       questionnaire_id = @exercice_looper_service.create_questionnaire(title)
 
-      response = {
-        message: "Questionnaire #{title} created",
-        questionnaire_id: questionnaire_id
-      }
-
-      return [201, { "content-type" => "application/json" }, [response.to_json]]
+      return [302, {"Location" => "/exercises/#{questionnaire_id}/fields.html" }, []]
     end
 
     if path == "/api/questionnaires" && method == "PUT"
