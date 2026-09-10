@@ -21,6 +21,8 @@ class Api
     path = env["PATH_INFO"]
     method = env["REQUEST_METHOD"]
 
+    # DOCUMENTATION RACK https://rack.github.io/rack/3.2/Rack/Request/Helpers.html
+
     if path == "/api/questionnaires" && method == "POST"
       request = Rack::Request.new(env)
       data = request.params
