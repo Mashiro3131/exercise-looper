@@ -6,8 +6,13 @@ class QuestionnaireRepository
   end
 
   def create(title)
-    statement = @db.prepare("INSERT INTO questionnaires (title) VALUES (?)")
+    statement = @db.prepare(
+      "INSERT INTO questionnaires (title) VALUES (?)"
+    )
+
     statement.execute(title)
+     @db.last_id
+
   end
 
   def find_all

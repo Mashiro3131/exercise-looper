@@ -25,8 +25,15 @@ class Api
       data = JSON.parse(body)
 
       title = data["title"]
-      @exercice_looper_service.create_questionnaire(title)
-      return [201, { "content-type" => "application/json" }, [{ message: "Questionnaire #{title} created" }.to_json]]
+
+      questionnaire_id = @exercice_looper_service.create_questionnaire(title)
+
+      response = {
+        message: "Questionnaire #{title} created",
+        questionnaire_id: questionnaire_id
+      }
+
+      return [201, { "content-type" => "application/json" }, [response.to_json]]
     end
 
     if path == "/api/questionnaires" && method == "PUT"
