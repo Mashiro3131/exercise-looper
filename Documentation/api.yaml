@@ -105,7 +105,7 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
-  /api/questions:
+  /api/questions/{questionnaire_id}:
     get:
       tags: [Questions]
       summary: Get questions belonging to a questionnaire
