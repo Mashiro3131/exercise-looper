@@ -4,6 +4,9 @@ nav:
   - Home: index.md
   - Gestion de projet:
       - DoD: gestion-de-projet/dod.md
+  - Technique:
+      - API documentation: technique/api/api.md
+      - Database schemas: technique/database/database-schemas.md
   - About: about.md
 
 theme:

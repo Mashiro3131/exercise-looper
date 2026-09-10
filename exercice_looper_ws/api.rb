@@ -2,6 +2,7 @@
 
 require "json"
 require "uri"
+require "rack"
 
 require_relative "db/database"
 require_relative "repository/questionnaire_repository"
@@ -20,18 +21,27 @@ class Api
     path = env["PATH_INFO"]
     method = env["REQUEST_METHOD"]
 
+    # DOCUMENTATION RACK https://rack.github.io/rack/3.2/Rack/Request/Helpers.html
+
     if path == "/api/questionnaires" && method == "POST"
-      body = env["rack.input"].read
-      data = JSON.parse(body)
+      request = Rack::Request.new(env)
+      data = request.params
 
       title = data["title"]
-      @exercice_looper_service.create_questionnaire(title)
-      return [201, { "content-type" => "application/json" }, [{ message: "Questionnaire #{title} created" }.to_json]]
+
+      questionnaire_id = @exercice_looper_service.create_questionnaire(title)
+
+      response = {
+        message: "Questionnaire #{title} created",
+        questionnaire_id: questionnaire_id
+      }
+
+      return [201, { "content-type" => "application/json" }, [response.to_json]]
     end
 
     if path == "/api/questionnaires" && method == "PUT"
-      body = env["rack.input"].read
-      data = JSON.parse(body)
+      request = Rack::Request.new(env)
+      data = request.params
 
       status = data["status"]
       id_questionnaire = data["id_questionnaire"]
@@ -55,11 +65,8 @@ class Api
 
     # QUESTIONS
 
-    if path == "/api/questions" && method == "GET"
-      body = env["rack.input"].read
-      data = JSON.parse(body)
-
-      questionnaire_id = data["questionnaire_id"]
+    if(method == "GET" && (match = path.match(%r{\A/api/questions/(\d+)\z})))
+      questionnaire_id = match[1]
       questions = @exercice_looper_service.find_all_questions_by_questionnaire_id(questionnaire_id)
       return [200,{ "content-type" => "application/json" }, [{questions: questions}.to_json] ]
     end

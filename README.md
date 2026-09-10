@@ -4,11 +4,15 @@
 
 # Stack de technologies
 
-# Deployement 
+# Deployement
 
-### Déploiement de l’API
+# Base de données
+le script de creation de DB et des tables est present dans /exercice_looper_ws/db_schema/exercice_looper.sql
 
-#### Installation des dépendances
+
+
+## Deployer l’API
+### Installation des dépendances
 
 Install global des gems nécessaires à l'api :
 
@@ -16,6 +20,17 @@ Install global des gems nécessaires à l'api :
 gem install rack
 gem install puma
 gem install mysql2
+```
+
+### Configuration des variables d'environment
+
+copier et remplir les variables d'environmnet dans le fichier .env.example vers un fichier .env , dans /exercice_looper_ws
+
+```text
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_NAME=
 ```
 
 #### Démarrage de l’API
@@ -30,4 +45,26 @@ L’API est disponible sur (par defaut) :
 
 ```text
 http://localhost:9292
+```
+
+## Deployer la documentation en local
+### Installation des dépendances
+Verifier si python est installé
+ ```bash
+ python --version
+```
+
+Installer mkdocs
+ ```bash
+ pip install mkdocs
+```
+
+Dans le dossier de la documentation lancer le serveur mkdocs
+
+```bash
+ cd Documentation/exercice_looper_documentation
+```
+
+```bash
+ mkdocs serve
 ```
