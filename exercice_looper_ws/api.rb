@@ -26,7 +26,6 @@ class Api
     if path == "/api/questionnaires" && method == "POST"
       request = Rack::Request.new(env)
       data = request.params
-
       title = data["title"]
 
       questionnaire_id = @exercice_looper_service.create_questionnaire(title)
