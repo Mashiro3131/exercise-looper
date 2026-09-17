@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>404 - Page Not Found</title>
+
+  <style>
+      * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+      }
+
+      body {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 30px;
+          font-family: Arial, sans-serif;
+          text-align: center;
+          color: #263238;
+          background: linear-gradient(135deg, #e8f5e9, #ffffff);
+      }
+
+      .error-page {
+          width: 100%;
+          max-width: 650px;
+      }
+
+      .error-code {
+          font-size: clamp(5rem, 18vw, 10rem);
+          line-height: 0.9;
+          color: #2e7d32;
+          opacity: 0.15;
+      }
+
+      .dodo-image {
+          display: block;
+          width: min(100%, 330px);
+          max-height: 330px;
+          margin: -30px auto 15px;
+          object-fit: contain;
+      }
+
+      h1 {
+          margin-bottom: 12px;
+          font-size: clamp(2rem, 7vw, 5rem);
+          color: red;
+      }
+
+      h2 {
+          margin-bottom: 12px;
+          font-size: clamp(1.8rem, 5vw, 3rem);
+          color: #1b5e20;
+      }
+
+      p {
+          margin-bottom: 28px;
+          color: #607d68;
+          font-size: 1.1rem;
+          line-height: 1.6;
+      }
+
+      .home-button {
+          display: inline-block;
+          padding: 13px 28px;
+          border-radius: 30px;
+          color: white;
+          background-color: #2e7d32;
+          font-weight: bold;
+          text-decoration: none;
+          transition: transform 0.2s, background-color 0.2s;
+      }
+
+      .home-button:hover {
+          transform: translateY(-3px);
+          background-color: #1b5e20;
+      }
+  </style>
+</head>
+
+<body>
+<main class="error-page">
+
+  <img
+    class="dodo-image"
+    src="../../assets/dodo_image.png"
+    alt="A confused dodo"
+  >
+  <h1>404</h1>
+  <h2>OUH LA,  ON N'A PAS ENCORE FINIS </h2>
+
+  <a class="home-button" href="/">Retourner</a>
+</main>
+</body>
+</html>
