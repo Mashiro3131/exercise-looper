@@ -73,3 +73,6 @@ refactor: modification du code sans changement fonctionnel
 docs: modification de la documentation
 chore: maintenance du projet
 ```
+
+## Exercice Looper Production
+Le projet se base sur: https://exercice-looper.mycpnv.ch
