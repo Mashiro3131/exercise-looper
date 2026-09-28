@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>ExerciseLooper</title>
+
+  <link
+    rel="stylesheet"
+    media="all"
+    href="/assets/application-e361a13b57bec6b1bc6fea43b0400f8127b0a85379744dbede7e758ecee45ab6.css"
+  >
+</head>
+
+<body>
+<header class="heading results">
+  <section class="container">
+    <a href="/">
+      <img src="/assets/logo-84d7d70645fbe179ce04c983a5fae1e6cba523d7cd28e0cd49a04707ccbef56e.png">
+    </a>
+  </section>
+</header>
+
+<main class="container">
+  <div class="row">
+    <section class="column">
+      <h1>Building</h1>
+
+      <table class="records">
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% questionnaires.each do |questionnaire| %>
+          <% if (questionnaire["status"] == "editing") %>
+            <tr>
+              <td><%= questionnaire["title"] %></td>
+
+              <td>
+                <a
+                  title="Manage fields"
+                  href="/exercises/<%= questionnaire["questionnaire_id"] %>/fields"
+                >
+                  <i class="fa fa-edit"></i>
+                </a>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="column">
+      <h1>Answering</h1>
+
+      <table class="records">
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% questionnaires.each do |questionnaire| %>
+          <% if (questionnaire["status"] == "answering") %>
+            <tr>
+              <td><%= questionnaire["title"] %></td>
+
+              <td>
+                <a
+                  title="Show results"
+                  href="/exercises/<%= questionnaire["questionnaire_id"] %>/results"
+                >
+                  <i class="fa fa-chart-bar"></i>
+                </a>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="column">
+      <h1>Closed</h1>
+
+      <table class="records">
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% questionnaires.each do |questionnaire| %>
+          <% if (questionnaire["status"] == "closed") %>
+            <tr>
+              <td><%= questionnaire["title"] %></td>
+
+              <td>
+                <a
+                  title="Show results"
+                  href="/exercises/<%= questionnaire["questionnaire_id"] %>/results"
+                >
+                  <i class="fa fa-chart-bar"></i>
+                </a>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</main>
+</body>
+</html>
