@@ -6,9 +6,16 @@ require_relative "api"
 require_relative "controllers/exercises_controller"
 
 class App
-  def initialize(exercice_looper_service)
-    @api = Api.new(exercice_looper_service)
-    @exercises_controller = ExercisesController.new(exercice_looper_service)
+  def initialize(questionnaires_service, questions_service)
+    @api = Api.new(
+      questionnaires_service,
+      questions_service
+    )
+
+    @exercises_controller = ExercisesController.new(
+      questionnaires_service,
+      questions_service
+    )
   end
 
   def call(env)
