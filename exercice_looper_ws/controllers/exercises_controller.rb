@@ -100,6 +100,14 @@ class ExercisesController
     def update_status(request, questionnaire_id)
       status = request.params["exercise"]["status"]
 
+      if status == "answering"
+        questions = @questions_service.find_all_questions_by_questionnaire_id(questionnaire_id)
+
+        if questions.empty?
+          return [303, { "location" => "/exercises/#{questionnaire_id}/fields" }, []]
+        end
+      end
+
       @questionnaires_service.update_questionnaire(questionnaire_id, status)
 
       [303, { "location" => "/exercises" }, []]
