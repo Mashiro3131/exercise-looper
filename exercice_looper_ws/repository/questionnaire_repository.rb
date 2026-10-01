@@ -16,7 +16,15 @@ class QuestionnaireRepository
   end
 
   def find_all
-    @db.query("SELECT * FROM questionnaires ").to_a
+    @db.query(
+      "SELECT questionnaires.*,
+      EXISTS(
+        SELECT 1
+        FROM questions
+        WHERE questions.questionnaire_id = questionnaires.questionnaire_id
+      ) AS has_questions
+      FROM questionnaires"
+    ).to_a
   end
 
   def find_by_id(questionnaire_id)

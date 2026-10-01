@@ -28,6 +28,7 @@ questions_service = QuestionsService.new(
   question_repository
 )
 
+use Rack::MethodOverride
 use Rack::Static,
     urls: ["/assets"],
     root: File.expand_path("..", __dir__)

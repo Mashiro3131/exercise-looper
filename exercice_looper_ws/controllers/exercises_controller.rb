@@ -96,4 +96,12 @@ class ExercisesController
 
       [303, { "location" => "/exercises/#{questionnaire_id}/fields" }, []]
     end
+
+    def update_status(request, questionnaire_id)
+      status = request.params["exercise"]["status"]
+
+      @questionnaires_service.update_questionnaire(questionnaire_id, status)
+
+      [303, { "location" => "/exercises" }, []]
+    end
 end
