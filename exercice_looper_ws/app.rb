@@ -44,6 +44,12 @@ class App
       return @exercises_controller.index
     end
 
+    if method == "POST" && (match = path.match(%r{\A/exercises/(\d+)/fields\z}))
+      questionnaire_id = match[1]
+
+      return @exercises_controller.create_field(request, questionnaire_id)
+    end
+
     if method == "GET" && (match = path.match(%r{\A/exercises/(\d+)/fields\z}))
       questionnaire_id = match[1]
 

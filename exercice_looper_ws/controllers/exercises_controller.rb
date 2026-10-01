@@ -75,4 +75,25 @@ class ExercisesController
 
       return [200, { "content-type" => "text/html; charset=utf-8" }, [rendered_html]]
     end
+
+    def create_field(request, questionnaire_id)
+      questionnaire = @questionnaires_service.fetch_questionnaire_by_questionnaire_id(questionnaire_id)
+
+      if questionnaire.nil?
+        return [404, { "content-type" => "text/plain" }, ["Questionnaire not found"]]
+      end
+
+      field = request.params["field"] || {}
+
+      question_text = field["label"].to_s.strip
+      value_kind = field["value_kind"].to_s
+
+      begin
+        @questions_service.create_question_from_value_kind(question_text, questionnaire_id, value_kind)
+      rescue ArgumentError => e
+        return [422, { "content-type" => "text/plain" }, [e.message]]
+      end
+
+      [303, { "location" => "/exercises/#{questionnaire_id}/fields" }, []]
+    end
 end
