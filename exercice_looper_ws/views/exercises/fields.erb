@@ -4,11 +4,9 @@
 <head>
   <title>ExerciseLooper</title>
 
-  <link
-    rel="stylesheet"
-    media="all"
-    href="/assets/application-e361a13b57bec6b1bc6fea43b0400f8127b0a85379744dbede7e758ecee45ab6.css"
-  >
+  <link rel="stylesheet" media="all" href="/assets/application-e361a13b57bec6b1bc6fea43b0400f8127b0a85379744dbede7e758ecee45ab6.css">
+
+  <script src="/assets/application-9cc88e7fff85c68238012d6b999fd1e76e1d36d66c1ff1be28bfd9056bb845eb.js"></script>
 </head>
 
 <body>
@@ -48,7 +46,7 @@
         <% questions.each do |question| %>
           <tr>
             <td><%= question["question_text"] %></td>
-            <td><%= question["question_type_id"] %></td>
+            <td><%= question["question_type_description"] %></td>
 
             <td>
               <a
@@ -63,9 +61,8 @@
         </tbody>
       </table>
 
-      <a data-confirm="Are you sure? You won&#39;t be able to further edit this exercise" class="button" rel="nofollow" data-method="put" href="../5880cfc.html?exercise%5Bstatus%5D=answering"><i class="fa fa-comment"></i> Complete and be ready for answers</a>
+      <a data-confirm="Are you sure? You won't be able to further edit this exercise" class="button" rel="nofollow" data-method="put" href="/exercises/<%= questionnaire["questionnaire_id"] %>?exercise[status]=answering"><i class="fa fa-comment"></i>Complete and be ready for answers</a>
     </section>
-
     <section class="column">
       <h1>New Field</h1>
 

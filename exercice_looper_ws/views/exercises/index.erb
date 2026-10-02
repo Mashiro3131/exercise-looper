@@ -4,11 +4,9 @@
 <head>
   <title>ExerciseLooper</title>
 
-  <link
-    rel="stylesheet"
-    media="all"
-    href="/assets/application-e361a13b57bec6b1bc6fea43b0400f8127b0a85379744dbede7e758ecee45ab6.css"
-  >
+  <link rel="stylesheet" media="all" href="/assets/application-e361a13b57bec6b1bc6fea43b0400f8127b0a85379744dbede7e758ecee45ab6.css">
+
+  <script src="/assets/application-9cc88e7fff85c68238012d6b999fd1e76e1d36d66c1ff1be28bfd9056bb845eb.js"></script>
 </head>
 
 <body>
@@ -38,8 +36,18 @@
           <% if (questionnaire["status"] == "editing") %>
             <tr>
               <td><%= questionnaire["title"] %></td>
-
               <td>
+                <% if questionnaire["has_questions"] == 1 %>
+                  <a
+                    title="Be ready for answers"
+                    rel="nofollow"
+                    data-method="put"
+                    href="/exercises/<%= questionnaire["questionnaire_id"] %>?exercise[status]=answering"
+                  >
+                    <i class="fa fa-comment"></i>
+                  </a>
+                <% end %>
+
                 <a
                   title="Manage fields"
                   href="/exercises/<%= questionnaire["questionnaire_id"] %>/fields"
@@ -70,13 +78,21 @@
           <% if (questionnaire["status"] == "answering") %>
             <tr>
               <td><%= questionnaire["title"] %></td>
-
               <td>
                 <a
                   title="Show results"
                   href="/exercises/<%= questionnaire["questionnaire_id"] %>/results"
                 >
                   <i class="fa fa-chart-bar"></i>
+                </a>
+
+                <a
+                  title="Close"
+                  rel="nofollow"
+                  data-method="put"
+                  href="/exercises/<%= questionnaire["questionnaire_id"] %>?exercise[status]=closed"
+                >
+                  <i class="fa fa-minus-circle"></i>
                 </a>
               </td>
             </tr>
