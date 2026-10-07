@@ -12,9 +12,9 @@ class QuestionsServiceTest < Minitest::Test
   def test_create_question
     puts "######### TEST create_question #############"
 
-    @questions_repository.expect(:create, 10, ["Your name?", 42, 1])
+    @questions_repository.expect(:create, 10, ["test bla bla", 42, 1])
 
-    result = @service.create_question("Your name?", 42, 1)
+    result = @service.create_question("test bla bla", 42, 1)
 
     puts "Expected result: 10"
     puts "Actual result:   #{result}"
@@ -29,10 +29,10 @@ class QuestionsServiceTest < Minitest::Test
     puts "######### TEST update_question #############"
 
     @questions_repository.expect(
-      :update, true, [10, "Your full name?", 42, 1]
+      :update, true, [10, "test bla bla", 42, 1]
     )
 
-    result = @service.update_question(10, "Your full name?", 42, 1)
+    result = @service.update_question(10, "test bla bla", 42, 1)
 
     puts "Expected result: true"
     puts "Actual result:   #{result}"
@@ -49,13 +49,13 @@ class QuestionsServiceTest < Minitest::Test
     questions = [
       {
         "question_id" => 10,
-        "question_text" => "Your name?",
+        "question_text" => "test bla bla",
         "questionnaire_id" => 42,
         "question_type_id" => 1
       },
       {
         "question_id" => 11,
-        "question_text" => "Your description?",
+        "question_text" => "test bla bla",
         "questionnaire_id" => 42,
         "question_type_id" => 3
       }
@@ -91,11 +91,11 @@ class QuestionsServiceTest < Minitest::Test
       )
 
       @questions_repository.expect(
-        :create, 10, ["Your answer?", 42, type_id]
+        :create, 10, ["test bla bla", 42, type_id]
       )
 
       result = @service.create_question_from_value_kind(
-        "Your answer?", 42, value_kind
+        "test bla bla", 42, value_kind
       )
 
       puts "Question type:   #{value_kind}"
@@ -117,10 +117,10 @@ class QuestionsServiceTest < Minitest::Test
       :find_question_type_id_by_description, 1, ["Single line text"]
     )
 
-    @questions_repository.expect(:create, 10, ["Your name?", 42, 1])
+    @questions_repository.expect(:create, 10, ["test bla bla", 42, 1])
 
     result = @service.create_question_from_value_kind(
-      "  Your name?  ", 42, "single_line"
+      "  test bla bla  ", 42, "single_line"
     )
 
     assert_equal 10, result
@@ -152,7 +152,7 @@ class QuestionsServiceTest < Minitest::Test
 
     error = assert_raises(ArgumentError) do
       @service.create_question_from_value_kind(
-        "Your name?", 42, "unknown_type"
+        "test bla bla", 42, "unknown_type"
       )
     end
 
