@@ -1,67 +1,21 @@
-# frozen_string_literal: true
-
 require "rack"
 
 require_relative "api"
-require_relative "controllers/exercises_controller"
+require_relative "router/router"
 
 class App
   def initialize(questionnaires_service, questions_service)
-    @api = Api.new(
-      questionnaires_service,
-      questions_service
-    )
-
-    @exercises_controller = ExercisesController.new(
-      questionnaires_service,
-      questions_service
-    )
+    @api = Api.new(questionnaires_service, questions_service)
+    @router = Router.new
   end
 
   def call(env)
     request = Rack::Request.new(env)
 
-    path = request.path_info
-    method = request.request_method
-
-    if path.start_with?("/api/")
+    if request.path_info.start_with?("/api/")
       return @api.call(env)
     end
 
-    if path == "/" && method == "GET"
-      return @exercises_controller.home
-    end
-
-    if path == "/exercises/new" && method == "GET"
-      return @exercises_controller.new
-    end
-
-    if path == "/exercises" && method == "POST"
-      return @exercises_controller.create(request)
-    end
-
-    if path == "/exercises" && method == "GET"
-      return @exercises_controller.index
-    end
-
-    if method == "POST" && (match = path.match(%r{\A/exercises/(\d+)/fields\z}))
-      questionnaire_id = match[1]
-
-      return @exercises_controller.create_field(request, questionnaire_id)
-    end
-
-    if method == "GET" && (match = path.match(%r{\A/exercises/(\d+)/fields\z}))
-      questionnaire_id = match[1]
-
-      return @exercises_controller.fields(questionnaire_id)
-    end
-
-    if method == "PUT" && (match = path.match(%r{\A/exercises/(\d+)\z}))
-      questionnaire_id = match[1]
-
-      return @exercises_controller.update_status(request, questionnaire_id)
-    end
-
-    return @exercises_controller.not_found
+    @router.dispatch(request)
   end
 end

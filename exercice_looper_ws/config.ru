@@ -33,6 +33,8 @@ use Rack::Static,
     urls: ["/assets"],
     root: File.expand_path("..", __dir__)
 
+
+# utile que pour la partie API pour tester les methodes sans front
 run App.new(
   questionnaires_service,
   questions_service

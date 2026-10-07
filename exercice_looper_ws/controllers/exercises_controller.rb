@@ -1,115 +1,110 @@
 # frozen_string_literal: true
 
-require "erb"
+require_relative "base_controller"
 
-class ExercisesController
+class ExercisesController < BaseController
+  def initialize(questionnaires_service, questions_service)
+    @questionnaires_service = questionnaires_service
+    @questions_service = questions_service
+  end
 
-    def initialize(questionnaires_service, questions_service)
-      @questionnaires_service = questionnaires_service
-      @questions_service = questions_service
-    end
+  def not_found
+    view("404", code: 404)
+  end
 
   def home
-    file_path = File.expand_path("../views/index.erb", __dir__)
-    html = File.read(file_path, encoding: "UTF-8")
-    rendered_html = ERB.new(html).result
-
-    return [200, { "content-type" => "text/html; charset=utf-8" }, [rendered_html]]
+    view("index")
   end
 
   def index
     questionnaires = @questionnaires_service.fetch_all_questionnaires
-    questionnaires = questionnaires.map { |questionnaire| questionnaire.transform_keys(&:to_s) }
 
-    file_path = File.expand_path("../views/exercises/index.erb", __dir__)
-    html = File.read(file_path, encoding: "UTF-8")
-    rendered_html = ERB.new(html).result_with_hash(questionnaires: questionnaires)
+    questionnaires = questionnaires.map do |questionnaire|
+      questionnaire.transform_keys(&:to_s)
+    end
 
-    return [200, { "content-type" => "text/html; charset=utf-8" }, [rendered_html]]
+    view(
+      "exercises/index",
+      data: {
+        questionnaires: questionnaires
+      }
+    )
   end
 
   def new
-    file_path = File.expand_path("../views/exercises/new.erb", __dir__)
-    html = File.read(file_path, encoding: "UTF-8")
-    rendered_html = ERB.new(html).result
-
-    return [200, { "content-type" => "text/html; charset=utf-8" }, [rendered_html]]
+    view("exercises/new")
   end
 
-    def create(request)
-      data = request.params
-      title = data["exercise"]["title"]
+  def create(request)
+    title = request.params["exercise"]["title"]
 
-      questionnaire_id = @questionnaires_service.create_questionnaire(title)
+    questionnaire_id = @questionnaires_service.create_questionnaire(title)
 
-      [303, { "location" => "/exercises/#{questionnaire_id}/fields" }, []]
-    end
-
-  def not_found
-    file_path = File.expand_path("../views/404.erb", __dir__)
-    html = File.read(file_path, encoding: "UTF-8")
-    rendered_html = ERB.new(html).result
-
-    return [404, { "content-type" => "text/html; charset=utf-8" }, [rendered_html]]
+    redirect("/exercises/#{questionnaire_id}/fields")
   end
 
-    def fields(questionnaire_id)
-      questionnaire = @questionnaires_service.fetch_questionnaire_by_questionnaire_id(questionnaire_id)
+  def fields(questionnaire_id)
+    questionnaire = @questionnaires_service.fetch_questionnaire_by_questionnaire_id(questionnaire_id)
 
-      if questionnaire.nil?
-        return [404, { "content-type" => "text/plain" }, ["Questionnaire not found"]]
+    return view("404", code: 404) unless questionnaire
+
+    questionnaire = questionnaire.transform_keys(&:to_s)
+
+    questions = @questions_service
+        .find_all_questions_by_questionnaire_id(questionnaire_id)
+        .map do |question|
+        question.transform_keys(&:to_s)
       end
 
-      questionnaire = questionnaire.transform_keys(&:to_s)
+    view("exercises/fields",
+      data: { questionnaire: questionnaire, questions: questions }
+    )
+  end
 
-      questions = @questions_service.find_all_questions_by_questionnaire_id(questionnaire_id)
-      questions = questions.map { |question| question.transform_keys(&:to_s) }
+  def create_field(request, questionnaire_id)
+    questionnaire = @questionnaires_service.fetch_questionnaire_by_questionnaire_id(questionnaire_id)
 
-      file_path = File.expand_path("../views/exercises/fields.erb", __dir__)
-      html = File.read(file_path, encoding: "UTF-8")
+    if questionnaire.nil?
+      return [404, { "content-type" => "text/plain" }, ["Questionnaire not found"]]
+    end
 
-      rendered_html = ERB.new(html).result_with_hash(
-        questionnaire: questionnaire,
-        questions: questions
+    field = request.params["field"] || {}
+
+    question_text = field["label"].to_s.strip
+    value_kind = field["value_kind"].to_s
+
+    begin
+      @questions_service.create_question_from_value_kind(
+        question_text,
+        questionnaire_id,
+        value_kind
       )
-
-      return [200, { "content-type" => "text/html; charset=utf-8" }, [rendered_html]]
+    rescue ArgumentError => e
+      return [422, { "content-type" => "text/plain" }, [e.message]]
     end
 
-    def create_field(request, questionnaire_id)
-      questionnaire = @questionnaires_service.fetch_questionnaire_by_questionnaire_id(questionnaire_id)
+    redirect("/exercises/#{questionnaire_id}/fields")
+  end
 
-      if questionnaire.nil?
-        return [404, { "content-type" => "text/plain" }, ["Questionnaire not found"]]
+  def update_status(request, questionnaire_id)
+    status = request.params["exercise"]["status"]
+
+    if status == "answering"
+      questions =
+        @questions_service.find_all_questions_by_questionnaire_id(questionnaire_id)
+
+      if questions.empty?
+        return redirect(
+          "/exercises/#{questionnaire_id}/fields"
+        )
       end
-
-      field = request.params["field"] || {}
-
-      question_text = field["label"].to_s.strip
-      value_kind = field["value_kind"].to_s
-
-      begin
-        @questions_service.create_question_from_value_kind(question_text, questionnaire_id, value_kind)
-      rescue ArgumentError => e
-        return [422, { "content-type" => "text/plain" }, [e.message]]
-      end
-
-      [303, { "location" => "/exercises/#{questionnaire_id}/fields" }, []]
     end
 
-    def update_status(request, questionnaire_id)
-      status = request.params["exercise"]["status"]
+    @questionnaires_service.update_questionnaire(
+      questionnaire_id,
+      status
+    )
 
-      if status == "answering"
-        questions = @questions_service.find_all_questions_by_questionnaire_id(questionnaire_id)
-
-        if questions.empty?
-          return [303, { "location" => "/exercises/#{questionnaire_id}/fields" }, []]
-        end
-      end
-
-      @questionnaires_service.update_questionnaire(questionnaire_id, status)
-
-      [303, { "location" => "/exercises" }, []]
-    end
+    redirect("/exercises")
+  end
 end
