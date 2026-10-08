@@ -15,7 +15,7 @@ class Router
   end
 
   def find(request)
-    warn "[Router] request method=#{request.request_method.inspect} path=#{request.path_info.inspect}"
+    puts "[Router] request method=#{request.request_method.inspect} path=#{request.path_info.inspect}"
 
     @routes.each do |route|
       method_match = route[:method] == request.request_method
@@ -23,7 +23,7 @@ class Router
       return route if method_match && path_match
     end
 
-    warn "[Router] no route matched"
+    puts "[Router] no route matched"
     nil
   end
 
