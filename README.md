@@ -40,7 +40,7 @@ DB_NAME=exercice_looper_db
 Depuis la racine du projet:
 ```bash
 cd exercice_looper_ws
-puma ws_config.ru
+puma config.ru
 ```
 
 L'application est ensuite accessible à l'adresse:

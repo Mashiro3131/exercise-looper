@@ -35,3 +35,13 @@ CREATE TABLE questions
     CONSTRAINT fk_questions_questionnaire FOREIGN KEY (questionnaire_id) REFERENCES questionnaires (questionnaire_id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_questions_question_type FOREIGN KEY (question_type_id) REFERENCES question_types (question_type_id) ON UPDATE CASCADE ON DELETE RESTRICT
 );
+
+CREATE TABLE answers
+(
+    answer_id   INT AUTO_INCREMENT,
+    question_id INT NOT NULL,
+    answer  VARCHAR (255) NOT NULL,
+    date DATETIME,
+    CONSTRAINT pk_answers PRIMARY KEY (answer_id),
+    CONSTRAINT fk_answer_question FOREIGN KEY (question_id) REFERENCES questions (question_id) ON UPDATE CASCADE ON DELETE CASCADE,
+)
