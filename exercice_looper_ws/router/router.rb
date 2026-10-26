@@ -1,41 +1,35 @@
 require_relative "../controllers/questionnaires_controller"
 require_relative "../controllers/questions_controller"
+require_relative "route"
+require_relative 'dynamic_route'
 
 class Router
   def initialize
     @routes = [
-      { path: "/", method: "GET", controller: QuestionnairesController, action: :home },
-      { path: "/exercises", method: "GET", controller: QuestionnairesController, action: :index },
-      { path: "/exercises/new", method: "GET", controller: QuestionnairesController, action: :new },
-      { path: "/exercises", method: "POST", controller: QuestionnairesController, action: :create },
-      { path: %r{\A/exercises/[^/]+/fields\z}, method: "GET", controller: QuestionsController, action: :fields },
-      { path: %r{\A/exercises/[^/]+/fields\z}, method: "POST", controller: QuestionsController, action: :create_field },
-      { path: %r{\A/exercises/[^/]+\z}, method: "PUT", controller: QuestionnairesController, action: :update_status }
+      Route.new("/", "GET", QuestionnairesController, "home"),
+      Route.new("/exercises", "GET", QuestionnairesController, "index"),
+      Route.new("/exercises/new", "GET", QuestionnairesController, "new"),
+      Route.new("/exercises", "POST", QuestionnairesController, "create"),
+      DynamicRoute.new("/exercises/:id/fields", "GET", QuestionsController, "fields"),
+      DynamicRoute.new("/exercises/:id/fields", "POST", QuestionsController, "create_field"),
+      DynamicRoute.new("/exercises/:id", "PUT", QuestionnairesController, "update_status")
     ]
   end
 
   def find(request)
-    puts "[Router] request method=#{request.request_method.inspect} path=#{request.path_info.inspect}"
+    puts "REQUEST METHOD: #{request.request_method}"
+    puts "REQUEST PATH: #{request.path_info}"
 
-    @routes.each do |route|
-      method_match = route[:method] == request.request_method
-      path_match = route[:path] === request.path_info
-      return route if method_match && path_match
+    @routes.find do |route|
+      matched = route.match?(request)
+      puts "Route: #{route.inspect} => #{matched}"
+      matched
     end
-
-    puts "[Router] no route matched"
-    nil
-  end
-
-  def redirect(route, request)
-    return QuestionnairesController.new(request).not_found unless route
-
-    controller = route[:controller].new(request)
-    controller.public_send(route[:action])
   end
 
   def dispatch(request)
     route = find(request)
-    redirect(route, request)
+    return QuestionnairesController.new(request).not_found unless route # ça pointe vers la page 404
+    route.act(request)
   end
 end

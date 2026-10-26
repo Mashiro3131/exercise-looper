@@ -10,8 +10,6 @@ require_relative "../services/questions_service"
 class QuestionsController < BaseController
   def initialize(request)
     @request = request
-
-
     db_connection = Database.connection
     @questionnaires_service = QuestionnairesService.new(QuestionnaireRepository.new(db_connection))
     @questions_service = QuestionsService.new(QuestionRepository.new(db_connection))
@@ -27,9 +25,7 @@ class QuestionsController < BaseController
     return view("404", code: 404) unless questionnaire
 
     questionnaire = questionnaire.transform_keys(&:to_s)
-    questions = @questions_service.find_all_questions_by_questionnaire_id(questionnaire_id)
-                                  .map { |question| question.transform_keys(&:to_s) }
-
+    questions = @questions_service.find_all_questions_by_questionnaire_id(questionnaire_id).map { |question| question.transform_keys(&:to_s) }
     view("exercises/fields", data: { questionnaire: questionnaire, questions: questions })
   end
 

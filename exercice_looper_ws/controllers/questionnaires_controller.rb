@@ -54,9 +54,8 @@ class QuestionnairesController < BaseController
     redirect("/exercises")
   end
 
-  private
-
   def current_questionnaire_id
     @request.path_info.split("/")[2]
   end
+
 end
