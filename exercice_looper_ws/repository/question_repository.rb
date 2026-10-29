@@ -39,4 +39,10 @@ class QuestionRepository
 
     statement.execute(questionnaire_id).to_a
   end
+
+
+  def find_question_by_id(question_id)
+    statement = @db.prepare("SELECT * FROM questions WHERE question_id = ?")
+    statement.execute(question_id).first
+  end
 end

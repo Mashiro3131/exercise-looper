@@ -12,7 +12,9 @@ class Router
       Route.new("/exercises", "POST", QuestionnairesController, "create"),
       DynamicRoute.new("/exercises/:id/fields", "GET", QuestionsController, "fields"),
       DynamicRoute.new("/exercises/:id/fields", "POST", QuestionsController, "create_field"),
-      DynamicRoute.new("/exercises/:id", "PUT", QuestionnairesController, "update_status")
+      DynamicRoute.new("/exercises/:id", "PUT", QuestionnairesController, "update_status"),
+      DynamicRoute.new("/exercises/:id/fields/:id/edit", "GET", QuestionsController, "get_field_by_id"),
+      DynamicRoute.new("/exercises/:id/fields/:id", "PUT", QuestionsController, "edit_field"),
     ]
   end
 

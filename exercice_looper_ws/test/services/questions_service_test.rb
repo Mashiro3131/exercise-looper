@@ -183,9 +183,7 @@ class QuestionsServiceTest < Minitest::Test
       "Question type is missing from the database",
       error.message
     )
-
     @questions_repository.verify
-
     puts "Test IS GOOOODDDD"
   end
 end
