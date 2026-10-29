@@ -1,5 +1,6 @@
 require_relative "../controllers/questionnaires_controller"
 require_relative "../controllers/questions_controller"
+require_relative "../controllers/answers_controller"
 require_relative "route"
 require_relative 'dynamic_route'
 
