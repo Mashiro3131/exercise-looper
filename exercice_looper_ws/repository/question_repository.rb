@@ -15,6 +15,11 @@ class QuestionRepository
     statement = @db.prepare("INSERT INTO questions (question_text, questionnaire_id, question_type_id) VALUES (?, ?, ?)")
     statement.execute(question_text, questionnaire_id, question_type_id)
   end
+  def delete(question_id)
+       statement = @db.prepare(
+         "DELETE FROM questions WHERE question_id = ?")
+       statement.execute(question_id)
+  end
 
   def find_question_type_id_by_description(description)
     statement = @db.prepare(
