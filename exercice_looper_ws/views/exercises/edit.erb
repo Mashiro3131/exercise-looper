@@ -1,0 +1,66 @@
+
+<link rel="stylesheet" media="all" href="/assets/application-e361a13b57bec6b1bc6fea43b0400f8127b0a85379744dbede7e758ecee45ab6.css">
+<script src="/assets/application-9cc88e7fff85c68238012d6b999fd1e76e1d36d66c1ff1be28bfd9056bb845eb.js" defer></script>
+
+<header class="heading managing">
+  <section class="container">
+    <a href="/">
+      <img src="/assets/logo-84d7d70645fbe179ce04c983a5fae1e6cba523d7cd28e0cd49a04707ccbef56e.png" alt="ExerciseLooper Logo">
+    </a>
+
+    <span class="exercise-label">
+      Exercise:
+      <a href="/exercises/<%= questionnaire["questionnaire_id"] %>/fields">
+        <%= ERB::Util.html_escape(questionnaire["title"].to_s) %>
+      </a>
+    </span>
+  </section>
+</header>
+
+<main class="container">
+
+  <h1>Editing Field</h1>
+
+  <form action="/exercises/<%= questionnaire["questionnaire_id"] %>/fields/<%= field["question_id"] %>" method="post">
+    <input type="hidden" name="_method" value="PUT">
+
+    <div class="field">
+      <label for="field_label">Label</label>
+
+      <input
+        type="text"
+        name="field[label]"
+        id="field_label"
+        value="<%= ERB::Util.html_escape(field["question_text"].to_s) %>"
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="field_value_kind">Field type</label>
+
+      <select name="field[value_kind]" id="field_value_kind">
+
+        <option value="single_line"
+                <%= "selected" if field["question_type_id"].to_i == 1 %>> <!--ça === single line cote DB...-->
+          Single line text
+        </option>
+
+        <option value="single_line_list"
+                <%= "selected" if field["question_type_id"].to_i == 2 %>>
+          List of single lines
+        </option>
+
+        <option value="multi_line"
+                <%= "selected" if field["question_type_id"].to_i == 3 %>>
+          Multi-line text
+        </option>
+
+      </select>
+    </div>
+
+    <div class="actions">
+      <input type="submit" name="commit" value="Update Field">
+    </div>
+  </form>
+</main>

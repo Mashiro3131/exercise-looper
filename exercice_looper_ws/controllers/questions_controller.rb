@@ -48,6 +48,44 @@ class QuestionsController < BaseController
     redirect("/exercises/#{questionnaire_id}/fields")
   end
 
+  def get_field_by_id
+    questionnaire_id = current_questionnaire_id
+    question_id = @request.path_info.split("/")[4]
+    questionnaire = @questionnaires_service.fetch_questionnaire_by_questionnaire_id(questionnaire_id)
+
+    return view("404", code: 404) unless questionnaire
+    question = @questions_service.find_question_by_id(question_id)
+    return view("404", code: 404) unless question
+    questionnaire = questionnaire.transform_keys(&:to_s)
+    question = question.transform_keys(&:to_s)
+    puts "[CURRENT QUESTION]: #{question}"
+
+    view("exercises/edit", data: { questionnaire: questionnaire, field: question })
+  end
+
+  def edit_field
+    questionnaire_id = current_questionnaire_id
+    question_id = @request.path_info.split("/")[4]
+
+    field = @request.params["field"]
+    question_text = field["label"].to_s.strip
+    value_kind = field["value_kind"].to_s
+
+    questionnaire = @questionnaires_service.fetch_questionnaire_by_questionnaire_id(questionnaire_id)
+    return view("404", code: 404) unless questionnaire
+    question = @questions_service.find_question_by_id(question_id)
+    return view("404", code: 404) unless question
+
+    begin
+      @questions_service.update_question_from_value_kind(question_id, question_text, questionnaire_id, value_kind)
+    rescue ArgumentError => e
+      return [422, { "content-type" => "text/plain" }, [e.message]]
+    end
+
+    url = "/exercises/#{questionnaire_id}/fields"
+    return [303, { "location" => url, "content-type" => "text/plain" }, []]
+  end
+
   def current_questionnaire_id
     @request.path_info.split("/")[2]
   end
