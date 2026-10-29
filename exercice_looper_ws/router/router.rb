@@ -1,7 +1,8 @@
 require_relative "../controllers/questionnaires_controller"
 require_relative "../controllers/questions_controller"
+require_relative "../controllers/answers_controller"
 require_relative "route"
-require_relative 'dynamic_route'
+require_relative "dynamic_route"
 
 class Router
   def initialize
@@ -12,7 +13,13 @@ class Router
       Route.new("/exercises", "POST", QuestionnairesController, "create"),
       DynamicRoute.new("/exercises/:id/fields", "GET", QuestionsController, "fields"),
       DynamicRoute.new("/exercises/:id/fields", "POST", QuestionsController, "create_field"),
-      DynamicRoute.new("/exercises/:id", "PUT", QuestionnairesController, "update_status")
+      DynamicRoute.new("/exercises/:id", "PUT", QuestionnairesController, "update_status"),
+
+      Route.new("/exercises/answering", "GET", AnswersController, "index"),
+      DynamicRoute.new("/exercises/:id/fulfillments/new", "GET", AnswersController, "new"),
+      DynamicRoute.new("/exercises/:id/fulfillments", "POST", AnswersController, "create"),
+      DynamicRoute.new("/exercises/:id/fulfillments/:submission_id/edit", "GET", AnswersController, "edit"),
+      DynamicRoute.new("/exercises/:id/fulfillments/:submission_id", "PUT", AnswersController, "update")
     ]
   end
 
@@ -29,7 +36,7 @@ class Router
 
   def dispatch(request)
     route = find(request)
-    return QuestionnairesController.new(request).not_found unless route # ça pointe vers la page 404
+    return QuestionnairesController.new(request).not_found unless route
     route.act(request)
   end
 end

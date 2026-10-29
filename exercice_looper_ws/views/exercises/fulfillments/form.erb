@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ExerciseLooper</title>
+  <link rel="stylesheet" media="all" href="/assets/application-e361a13b57bec6b1bc6fea43b0400f8127b0a85379744dbede7e758ecee45ab6.css">
+  <script src="/assets/application-9cc88e7fff85c68238012d6b999fd1e76e1d36d66c1ff1be28bfd9056bb845eb.js"></script>
+</head>
+
+<body>
+  <header class="heading answering">
+    <section class="container">
+      <a href="/">
+        <img src="/assets/logo-84d7d70645fbe179ce04c983a5fae1e6cba523d7cd28e0cd49a04707ccbef56e.png">
+      </a>
+
+      <span class="exercise-label">
+        Exercise:
+        <span class="exercise-title">
+          <%= ERB::Util.html_escape(questionnaire["title"]) %>
+        </span>
+      </span>
+    </section>
+  </header>
+
+  <main class="container">
+    <h1>Your take</h1>
+
+    <p id="save-message"> If you'd like to come back later to finish, simply submit it with blanks </p>
+
+    <form action="<%= form_action %>" method="post">
+      <% if editing %>
+        <input type="hidden" name="_method" value="put">
+      <% end %>
+
+      <% questions.each do |question| %>
+        <% id = question["question_id"].to_s %>
+        <% value = answers[id].to_s %>
+
+        <div class="field">
+          <label for="answer_<%= id %>">
+            <%= ERB::Util.html_escape(question["question_text"]) %>
+          </label>
+
+          <% if question["question_type_description"] == "Single line text" %>
+            <input
+              type="text"
+              id="answer_<%= id %>"
+              name="answers[<%= id %>]"
+              value="<%= ERB::Util.html_escape(value) %>"
+            >
+          <% else %>
+            <textarea
+              id="answer_<%= id %>"
+              name="answers[<%= id %>]"
+              rows="4"
+            ><%= ERB::Util.html_escape(value) %></textarea>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="actions">
+        <input type="submit" value="Save">
+      </div>
+    </form>
+  </main>
+
+
+    <script>
+    const form = document.querySelector("form");
+    const message = document.getElementById("save-message");
+
+    if (sessionStorage.getItem("justSaved") === "1") {
+        message.textContent = "Bookmark this page, it's yours. You'll be able to come back later to finish.";
+        sessionStorage.removeItem("justSaved");
+    }
+
+    form.addEventListener("submit", () => {
+        sessionStorage.setItem("justSaved", "1");
+    });
+    </script>
+</body>
+</html>
