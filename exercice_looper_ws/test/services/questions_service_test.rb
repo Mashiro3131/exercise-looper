@@ -43,6 +43,21 @@ class QuestionsServiceTest < Minitest::Test
     puts "Test IS GOOOODDDD"
   end
 
+  def test_delete_question
+    puts "######### TEST delete_question #############"
+
+    question = { "question_id" => 10, "questionnaire_id" => 42 }
+
+    @questions_repository.expect(:find_question_by_id, question, ["10"])
+    @questions_repository.expect(:delete, true, ["10"])
+
+    result = @service.delete_question("10", "42")
+
+    assert_equal true, result
+    @questions_repository.verify
+    puts "WAZAAAAAA test IS GOOOODDDD"
+  end
+
   def test_find_all_questions_by_questionnaire_id
     puts "######### TEST find_all_questions_by_questionnaire_id #############"
 

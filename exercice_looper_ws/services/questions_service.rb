@@ -65,6 +65,14 @@ class QuestionsService
     @questions_repository.update(question_id,question_text, questionnaire_id, question_type_id)
   end
 
+  def delete_question(question_id, questionnaire_id)
+    question = @questions_repository.find_question_by_id(question_id)
+    if question.nil? || question["questionnaire_id"].to_s != questionnaire_id.to_s
+      raise ArgumentError, "Question not found"
+    end
+    @questions_repository.delete(question_id)
+  end
+
   def find_all_questions_by_questionnaire_id(questionnaire_id)
     @questions_repository.find_all_questions_by_questionnaire_id(questionnaire_id)
   end
