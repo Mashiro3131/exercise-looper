@@ -86,6 +86,18 @@ class QuestionsController < BaseController
     return [303, { "location" => url, "content-type" => "text/plain" }, []]
   end
 
+  def delete_field
+    questionnaire_id = current_questionnaire_id
+    question_id = @request.path_info.split("/")[4]
+
+    begin
+      @questions_service.delete_question(question_id, questionnaire_id)
+      redirect "/exercises/#{questionnaire_id}/fields"
+    rescue ArgumentError => e
+      return view("404", code: 404)
+    end
+  end
+
   def current_questionnaire_id
     @request.path_info.split("/")[2]
   end
