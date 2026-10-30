@@ -55,6 +55,16 @@
               >
                 <i class="fa fa-edit"></i>
               </a>
+
+              <a
+                title="Delete"
+                data-method="delete"
+                data-confirm="Are you sure?"
+                rel="nofollow"
+                href="/exercises/<%= questionnaire["questionnaire_id"] %>/fields/<%= question["question_id"] %>"
+              >
+                <i class="fa fa-trash"></i>
+              </a>
             </td>
           </tr>
         <% end %>
