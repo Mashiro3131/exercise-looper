@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "../db/database"
+
 class QuestionnaireRepository
-  def initialize(db_connection)
+  def initialize(db_connection = Database.connection)
     @db = db_connection
   end
 
@@ -11,12 +13,19 @@ class QuestionnaireRepository
     )
 
     statement.execute(title)
-     @db.last_id
-
+    @db.last_id
   end
 
   def find_all
-    @db.query("SELECT * FROM questionnaires ").to_a
+    @db.query(
+      "SELECT questionnaires.*,
+      EXISTS(
+        SELECT 1
+        FROM questions
+        WHERE questions.questionnaire_id = questionnaires.questionnaire_id
+      ) AS has_questions
+      FROM questionnaires"
+    ).to_a
   end
 
   def find_by_id(questionnaire_id)

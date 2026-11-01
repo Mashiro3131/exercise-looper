@@ -1,6 +1,9 @@
 # Architecture
 
-## MLD (10.09.2026)
-![MLD](Documentation/exercice_looper_documentation/docs/images/MLD_exercice_looper.drawio.svg)
-## MCD (10.09.2026)
-![MCD](Documentation/exercice_looper_documentation/docs/images/MLD_exercice_looper.drawio.svg)
+## MLD (01.11.2026)
+
+![MLD](../../images/MLD_exercice_looper.drawio.svg)
+
+## MCD (01.11.2026)
+
+![MCD](../../images/MCD_exercice_looper.drawio.svg)
