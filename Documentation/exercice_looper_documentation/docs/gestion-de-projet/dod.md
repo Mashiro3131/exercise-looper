@@ -2,6 +2,6 @@
 
 -  Test fonctionnel passé
 -  Test de régression passé
--  Documentation à jour (technique/guide utilisateur)
+-  Documentation à jour
 -  Revue du code passé
 -  Aucune anomalie connue

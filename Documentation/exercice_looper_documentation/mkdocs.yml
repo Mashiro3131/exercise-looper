@@ -5,9 +5,8 @@ nav:
   - Gestion de projet:
       - DoD: gestion-de-projet/dod.md
   - Technique:
-      - API documentation: technique/api/api.md
+      - Routes: technique/routes/routes.md
       - Database schemas: technique/database/database-schemas.md
-  - About: about.md
 
 theme:
   name: readthedocs
